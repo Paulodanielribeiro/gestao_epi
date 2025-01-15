@@ -1,18 +1,18 @@
 <?php
-require '../config/db.php';
+require_once 'config.php';
 
-$data = json_decode(file_get_contents('php://input'), true);
+$nome_epi = $_POST['nome_epi'];
+$descricao = $_POST['descricao'];
+$validade_meses = $_POST['validade_meses'];
+$quantidade_estoque = $_POST['quantidade_estoque'];
 
-$colaborador_id = $data['colaborador_id'];
-$epi_id = $data['epi_id'];
-$quantidade = $data['quantidade'];
-$data_entrega = $data['data_entrega'];
+$sql = "INSERT INTO epis (nome_epi, descricao, validade_meses, quantidade_estoque) VALUES (?,?,?,?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ssii", $nome_epi, $descricao, $validade_meses, $quantidade_estoque);
 
-$sql = "INSERT INTO entregas (colaborador_id, epi_id, quantidade, data_entrega) VALUES (?, ?, ?, ?)";
-$stmt = $pdo->prepare($sql);
-if ($stmt->execute([$colaborador_id, $epi_id, $quantidade, $data_entrega])) {
-    echo json_encode(['status' => 'sucesso']);
+if ($stmt->execute()) {
+    echo json_encode(["status" => "success", "message" => "EPI cadastrado com sucesso!"]);
 } else {
-    echo json_encode(['status' => 'erro']);
+    echo json_encode(["status" => "error", "message" => "Erro ao cadastrar EPI."]);
 }
 ?>
