@@ -1,14 +1,17 @@
 <?php
-$host = 'localhost';
-$user = 'root';
-$password = '';
-$dbname = 'gestao_epi';
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-// Conexão com o banco de dados
-$conn = new mysqli($host, $user, $password, $dbname);
+$host = "localhost";
+$dbname = "gestao_epi";
+$username = "root";
+$password = "";
 
-// Verificação de erro
-if ($conn->connect_error) {
-    die("Falha na conexão: " . $conn->connect_error);
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo "Erro na conexão: " . $e->getMessage();
+    exit;
 }
 ?>

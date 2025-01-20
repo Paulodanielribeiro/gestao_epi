@@ -1,4 +1,6 @@
 <?php
-header("Content-Type: application/json");
-require_once 'db.php';
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'gestao_epi');
+define('DB_USER', 'root');
+define('DB_PASS', '');
 ?>

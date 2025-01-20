@@ -1,20 +1,21 @@
 function gerarRelatorio() {
     fetch('../api/gerar_relatorio.php')
-        .then(response => response.json())
-        .then(data => {
-            const ctx = document.getElementById('graficoRelatorio').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: data.map(item => item.nome_epi),
-                    datasets: [{
-                        label: 'Quantidade Entregue',
-                        data: data.map(item => item.total_entregue),
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                }
-            });
-        });
+        .then(response => {
+            if (response.ok) {
+                return response.blob(); // Caso seja para download
+            } else {
+                throw new Error("Erro ao gerar relatório");
+            }
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'relatorio.pdf'; // Nome do arquivo
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => console.error(error.message));
 }
